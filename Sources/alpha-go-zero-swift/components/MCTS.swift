@@ -20,14 +20,14 @@ class MCTS {
     private let root_noise: Bool
     private let board_size: Int
     
-    private let Qsa: [Int: Int] = [:] // stores Q values for s,a (as defined in the paper)
-    private let Nsa: [String: Double] = [:] // stores #times edge s,a was visited
+    private let Qsa: [(String, Int): Double] = [:] // stores Q values for s,a (as defined in the paper)
+    private let Nsa: [(String, Int): Double] = [:] // stores #times edge s,a was visited
     private let Ns: [String: Int] = [:]  // stores #times board s was visited
-    private var Ps: [String: Double] = [:]  // stores initial policy (returned by neural net)
+    private var Ps: [String: [Double]] = [:]  // stores initial policy (returned by neural net)
     
     
     private var Es: [String: Int] = [:]  // stores game.getGameEnded ended for board s
-    private let Vs: [Int: Int] = [:]  // stores game.getValidMoves for board s
+    private let Vs: [String: [Int]] = [:]  // stores game.getValidMoves for board s
     private var num_every_mode_valid = 0
     
     

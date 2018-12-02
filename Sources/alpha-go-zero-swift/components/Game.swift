@@ -57,7 +57,7 @@ class Game {
         return 0
     }
     
-    func get_valid_moves(board: Board, player: Int) -> [Board] {
-        return [board]
+    func get_valid_moves(board: Board, player: Int) -> [Int] {
+        return board.pieces[0]
     }
 }

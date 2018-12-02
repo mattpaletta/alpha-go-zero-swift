@@ -39,18 +39,20 @@ class NNet {
     }
     
     func train(examples: [TrainExample]) {
-        
+        // Here we always use the tensorflow network
     }
     
-    func predict(board: Board) -> (Double, Double) {
-        return (0, 0)
+    func predict(board: Board) -> ([Double], [Double]) {
+        // Here we can dynamically change between the metal and tensorflow networks
+        // Depending on the capability of the machine!
+        return ([0], [0])
     }
     
     func save_checkpoint(folder: String, filename: String) {
-        
+        // Convert to metal weights too!
     }
     
     func load_checkpoint(folder: String, filename: String) {
-        
+        // Load metal weights too!
     }
 }

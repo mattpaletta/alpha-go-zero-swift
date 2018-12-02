@@ -38,9 +38,12 @@ class NNet {
         self.network_architecture = network_architecture
     }
     
-    
     func train(examples: [TrainExample]) {
         
+    }
+    
+    func predict(board: Board) -> (Double, Double) {
+        return (0, 0)
     }
     
     func save_checkpoint(folder: String, filename: String) {

@@ -21,6 +21,21 @@ public extension Array where Element: Numeric {
             })
         })
     }
+    
+    
+    static func ^(left: [Element], right: Element) -> [Element] { // 1
+        return left.map({ item in
+            return item ^ right
+        })
+    }
+    
+    static func ^(left: [[Element]], right: Element) -> [[Element]] { // 1
+        return left.map({ (row: [Element]) -> [Element] in
+            return row.map({ item in
+                return item ^ right
+            })
+        })
+    }
 }
 
 public extension Array where Element: Comparable {

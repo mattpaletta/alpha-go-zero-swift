@@ -11,6 +11,15 @@ class Board {
     
     let size: Int
     var pieces: [[Int]]
+    var canonical_board: [[[Int]]] {
+        get {
+            return self.pieces.map { (row) -> [[Int]] in
+                return row.map({ (col) -> [Int] in
+                    return [col]
+                })
+            }
+        }
+    }
     
     init(size: Int) {
         self.size = size

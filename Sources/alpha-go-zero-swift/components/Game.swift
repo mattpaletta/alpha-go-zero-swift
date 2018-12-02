@@ -7,8 +7,6 @@
 
 import Foundation
 
-//let np = Python.import("numpy")
-
 class Game {
     
     let size: Int
@@ -27,7 +25,7 @@ class Game {
     }
     
     convenience init() {
-        self.init(size: 5)
+        self.init(size: 15)
     }
     
     convenience init(size: Int) {
@@ -39,11 +37,15 @@ class Game {
         return board
     }
     
+    func as_string(board: Board) -> String {
+        return ""
+    }
+    
     func get_canonical_form(board: Board, player: Int) -> Board {
         return board.get_canonical_form(player: player)
     }
     
-    func get_symmetries(board: Board, pi: [Float]) -> [(board: Board, pi: Float)] {
+    func get_symmetries(board: Board, pi: [Double]) -> [(board: Board, pi: Double)] {
         return [(board: board, pi: 0.0)]
     }
     
@@ -53,5 +55,9 @@ class Game {
     
     func get_game_ended(board: Board, player: Int) -> Int {
         return 0
+    }
+    
+    func get_valid_moves(board: Board, player: Int) -> [Board] {
+        return [board]
     }
 }

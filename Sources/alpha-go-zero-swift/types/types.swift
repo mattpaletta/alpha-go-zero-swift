@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias TrainExample = (board: Board, player: Int, pi: Float, a: Int?)
+typealias TrainExample = (board: Board, player: Int, pi: Double, a: Int?)

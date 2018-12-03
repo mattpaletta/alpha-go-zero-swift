@@ -33,4 +33,17 @@ class Board {
         self.pieces = self.pieces * player
         return self
     }
+    
+    func execute_move(move: (Int, Int), player: Int) {
+        
+    }
+    
+    func get_legal_moves(player: Int) -> [(Int, Int)] {
+        return []
+    }
+    
+    func has_legal_moves() -> Bool {
+        return false
+    }
+    
 }

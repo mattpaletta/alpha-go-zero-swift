@@ -12,6 +12,28 @@ fileprivate let SECOND_PLAYER = 2
 fileprivate let GAME_ENDED = 0
 fileprivate let EPS = 10 ^ (-8)
 
+fileprivate class SearchState: Hashable, Comparable {
+    var board_string: String
+    var count: Int
+    
+    var hashValue: Int {
+        return self.board_string.hashValue + self.count.hashValue
+    }
+    
+    init(board: String, count: Int) {
+        self.board_string = board
+        self.count = count
+    }
+    
+    static func ==(lhs: SearchState, rhs: SearchState) -> Bool {
+        return lhs.board_string == rhs.board_string && lhs.count == rhs.count
+    }
+    
+    static func < (lhs: SearchState, rhs: SearchState) -> Bool {
+        return lhs.board_string < rhs.board_string && lhs.count < rhs.count
+    }
+}
+
 class MCTS {
     private let game: Game
     private let nnet: NNet
@@ -20,8 +42,8 @@ class MCTS {
     private let root_noise: Bool
     private let board_size: Int
     
-    private let Qsa: [(String, Int): Double] = [:] // stores Q values for s,a (as defined in the paper)
-    private let Nsa: [(String, Int): Double] = [:] // stores #times edge s,a was visited
+    private let Qsa: [SearchState: Double] = [:] // stores Q values for s,a (as defined in the paper)
+    private let Nsa: [SearchState: Double] = [:] // stores #times edge s,a was visited
     private let Ns: [String: Int] = [:]  // stores #times board s was visited
     private var Ps: [String: [Double]] = [:]  // stores initial policy (returned by neural net)
     
@@ -47,8 +69,10 @@ class MCTS {
         }
         
         let s = self.game.as_string(board: board)
+        let state = SearchState(board: s, count: 0)
+        
         var counts: [Double] = Array(0..<self.game.action_size).map { (a) -> Double in
-            guard let a = self.Nsa[s] else { return 0.0 }
+            guard let a = self.Nsa[state] else { return 0.0 }
             return a
         }
         
@@ -77,7 +101,7 @@ class MCTS {
         let board_string = self.game.as_string(board: board)
         
         if !self.Es.keys.contains(board_string) {
-            self.Es.updateValue(self.game.get_game_ended(board: board, player: FIRST_PLAYER), forKey: board_string)
+            self.Es.updateValue(Int(self.game.get_game_ended(board: board, player: FIRST_PLAYER)), forKey: board_string)
         }
         
         if self.Es[board_string]! != GAME_ENDED {

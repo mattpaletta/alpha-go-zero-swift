@@ -8,6 +8,12 @@
 import Foundation
 
 public extension Array where Element: Numeric {
+    static func *(left: [Int], right: Double) -> [Double] { // 1
+        return left.map({ item in
+            return Double(item * right)
+        })
+    }
+    
     static func *(left: [Element], right: Element) -> [Element] { // 1
         return left.map({ item in
             return item * right
@@ -39,7 +45,6 @@ public extension Array where Element: Numeric {
 }
 
 public extension Array where Element: Comparable {
-    
     func argmax() -> [Int] {
         guard !self.isEmpty else {
             return []
@@ -61,6 +66,46 @@ public extension Array where Element: Comparable {
 }
 
 public extension Array {
+    
+    static func to_square<T>(array: [T]) -> [[T]] {
+        var matrix: [[T]] = []
+        let size = Int(sqrt(Double(array.count)))
+        
+        for i in 0 ..< size {
+            for j in 0 ..< size {
+                matrix[i][j] = array[i * j]
+            }
+        }
+        
+        return matrix
+    }
+    
+    static func rotate<T>(matrix: [[T]]) -> [[T]] {
+        var matrix_copy = matrix
+        let size = matrix.count
+        let layer_count = size / 2
+    
+        for layer in 0 ..< layer_count {
+            let first = layer
+            let last = size - first - 1
+    
+            for element in first ..< last {
+                let offset = element - first
+    
+                let top = matrix_copy[first][element]
+                let right_side = matrix_copy[element][last]
+                let bottom = matrix_copy[last][last-offset]
+                let left_side = matrix_copy[last-offset][first]
+    
+                matrix_copy[first][element] = left_side
+                matrix_copy[element][last] = top
+                matrix_copy[last][last-offset] = right_side
+                matrix_copy[last-offset][first] = bottom
+            }
+        }
+        return matrix_copy
+    }
+
     
     func pmap<T>(transformer: @escaping (Element) -> T) -> [T] {
         var result: [Int: [T]] = [:]

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Python
 
 class Game {
     
@@ -46,18 +47,89 @@ class Game {
     }
     
     func get_symmetries(board: Board, pi: [Double]) -> [(board: Board, pi: Double)] {
+        assert(pi.count == (self.size ^ 2) + 1)
+        let pi_board: [Int] = pi.to_square()
+        
+        var l: [Int] = []
+        for i in 1 ..< 5 {
+            for i in [true, false] {
+                
+            }
+        }
+        
         return [(board: board, pi: 0.0)]
     }
     
     func get_next_state(board: Board, player: Int, action: Int) -> (Board, Int) {
-        return (board, player)
+        if action == self.size * self.size {
+            return (board, -player)
+        }
+        let b = Board(size: self.size)
+        b.pieces = board.pieces
+        let move = (Int(action / self.size), action % self.size)
+        b.execute_move(move: move, player: player)
+        return (b, -player)
     }
     
-    func get_game_ended(board: Board, player: Int) -> Int {
-        return 0
+    func get_game_ended(board: Board, player: Int) -> Double {
+        let b = Board(size: self.size)
+        b.pieces = board.pieces
+        let n = self.n_in_row
+        
+        for w in 0 ..< self.size {
+            for h in 0 ..< self.size {
+                let contains_w = (0 ..< (self.size - n + 1)).contains(w)
+                let contains_h = (0 ..< (self.size - n + 1)).contains(h)
+                
+                let w_range = Set(Array(w ..< w + n).map({ (i) -> Int in
+                    return board.pieces[i][h]
+                })).count == 1
+                
+                let h_range = Set(Array(h ..< h + n).map({ (j) -> Int in
+                    return board.pieces[w][j]
+                })).count == 1
+                
+                let w2_range = Set(Array(0 ..< self.size - self.size + 1).map({ (k) -> Int in
+                    return board.pieces[w + k][h + k]
+                })).count == 1
+                
+                let h2_range = Set(Array(self.size - self.size + 1 ..< self.size).map({ (l) -> Int in
+                    return board.pieces[w + l][h + l]
+                })).count == 1
+                
+                let is_empty_piece = board.pieces[w][h] != 0
+                
+                if contains_w && is_empty_piece && w_range {
+                    return Double(board.pieces[w][h])
+                } else if contains_h && is_empty_piece && h_range {
+                    return Double(board.pieces[w][h])
+                } else if contains_w && contains_h && is_empty_piece && w2_range {
+                    return Double(board.pieces[w][h])
+                } else if contains_w && contains_h && is_empty_piece && h2_range {
+                    return Double(board.pieces[w][h])
+                }
+            }
+        }
+        
+        if b.has_legal_moves() {
+            return 0.0
+        }
+        
+        return 1e-4
     }
     
     func get_valid_moves(board: Board, player: Int) -> [Int] {
-        return board.pieces[0]
+        var valids = Array.init(repeating: 0, count: self.action_size)
+        let b = Board(size: self.size)
+        b.pieces = board.pieces
+        let legal_moves = b.get_legal_moves(player: player)
+        if legal_moves.isEmpty {
+            valids[-1] = 1
+            return valids
+        }
+        for (x, y) in legal_moves {
+            valids[self.size * x + y] = 1
+        }
+        return valids
     }
 }

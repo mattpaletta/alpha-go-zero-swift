@@ -61,7 +61,7 @@ class Arena {
         }
     }
     
-    private func play_game() -> Int {
+    private func play_game() -> Double {
         let players = [self.player2, nil, self.player1]
         let cur_player = 1
         let board = self.game.get_init_board()

@@ -9,14 +9,20 @@ import Foundation
 
 public extension Array where Element: Numeric {
     static func *(left: [Int], right: Double) -> [Double] { // 1
-        return left.map({ item in
-            return Double(item * right)
-        })
+        return left.map { item in
+            return Double(item) * right
+        }
     }
     
     static func *(left: [Element], right: Element) -> [Element] { // 1
         return left.map({ item in
             return item * right
+        })
+    }
+    
+    static func +(left: [Element], right: Element) -> [Element] { // 1
+        return left.map({ item in
+            return item + right
         })
     }
     
@@ -28,26 +34,48 @@ public extension Array where Element: Numeric {
         })
     }
     
-    
-    static func ^(left: [Element], right: Element) -> [Element] { // 1
-        return left.map({ item in
-            return item ^ right
-        })
+    static func to_square(_ array: [Double]) -> [[Double]] {
+        var matrix: [[Double]] = []
+        let size = Int(sqrt(Double(array.count)))
+        
+        for i in 0 ..< size {
+            for j in 0 ..< size {
+                matrix[i][j] = array[i * j]
+            }
+        }
+        
+        return matrix
     }
     
-    static func ^(left: [[Element]], right: Element) -> [[Element]] { // 1
-        return left.map({ (row: [Element]) -> [Element] in
-            return row.map({ item in
-                return item ^ right
-            })
+    static func mask(_ left: [Element], mask: [Int]) -> [Element] {
+        return zip(left, mask).map { item, valid in
+            if valid == 1 {
+                return item
+            } else {
+                return 0
+            }
+        }
+    }
+}
+
+public func pow(_ left: [Double], _ right: Double) -> [Double] {
+    return left.map { item in
+        return Foundation.pow(item, right)
+    }
+}
+
+public func pow(_ left: [[Double]], _ right: Double) -> [[Double]] {
+    return left.map { row in
+        return row.map({ item in
+            return Foundation.pow(item, right)
         })
     }
 }
 
 public extension Array where Element: Comparable {
-    func argmax() -> [Int] {
+    func argmax() -> Int {
         guard !self.isEmpty else {
-            return []
+            return 0
         }
         
         let m = self.max(by: { (a: Element, b: Element) -> Bool in
@@ -61,26 +89,44 @@ public extension Array where Element: Comparable {
             return a == m
         }).map({ (_, i) -> Int in
             return i!
-        })
+        }).first!
     }
 }
 
-public extension Array {
-    
-    static func to_square<T>(array: [T]) -> [[T]] {
-        var matrix: [[T]] = []
-        let size = Int(sqrt(Double(array.count)))
-        
-        for i in 0 ..< size {
-            for j in 0 ..< size {
-                matrix[i][j] = array[i * j]
-            }
+public func fliplr<T>(_ array: [[T]]) -> [[T]] {
+    var arr: [[T]] = []
+
+    for j in 0 ..< array.count {
+        var tmp: [T] = []
+
+        // Add the second half
+        for i in 0 ..< (array[j].count / 2) {
+            tmp.append(array[j][array[j].count - i - 1])
         }
         
-        return matrix
+        // Add the first half
+        for i in (array[j].count / 2) + 1 ..< array[j].count {
+            tmp.append(array[i][j])
+        }
+        arr.append(tmp)
     }
     
-    static func rotate<T>(matrix: [[T]]) -> [[T]] {
+    return arr
+}
+
+public func flatten<T>(_ array: [[T]]) -> [T] {
+    var output: [T] = []
+    for row in array {
+        for item in row {
+            output.append(item)
+        }
+    }
+    
+    return output
+}
+
+public func rotate<T>(_ array: [[T]], _ num: Int) -> [[T]] {
+    func aux(_ matrix: [[T]]) -> [[T]] {
         var matrix_copy = matrix
         let size = matrix.count
         let layer_count = size / 2
@@ -88,15 +134,15 @@ public extension Array {
         for layer in 0 ..< layer_count {
             let first = layer
             let last = size - first - 1
-    
+            
             for element in first ..< last {
                 let offset = element - first
-    
+                
                 let top = matrix_copy[first][element]
                 let right_side = matrix_copy[element][last]
                 let bottom = matrix_copy[last][last-offset]
                 let left_side = matrix_copy[last-offset][first]
-    
+                
                 matrix_copy[first][element] = left_side
                 matrix_copy[element][last] = top
                 matrix_copy[last][last-offset] = right_side
@@ -106,8 +152,15 @@ public extension Array {
         return matrix_copy
     }
 
-    
-    func pmap<T>(transformer: @escaping (Element) -> T) -> [T] {
+    if num >= 2 {
+        return rotate(aux(array), num - 1)
+    } else {
+        return aux(array)
+    }
+}
+
+public extension Array {
+    public func pmap<T>(transformer: @escaping (Element) -> T) -> [T] {
         var result: [Int: [T]] = [:]
         guard !self.isEmpty else {
             return []

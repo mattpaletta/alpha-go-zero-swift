@@ -204,7 +204,9 @@ class Coach {
             let symmetries = self.game.get_symmetries(board: canonical_board, pi: pi)
             
             for (board, pi_c) in symmetries {
-                train_examples.append((board: board, player: cur_player, pi: pi_c, a: nil))
+                let b = Board(size: board.count)
+                b.pieces = board
+                train_examples.append((board: b, player: cur_player, pi: pi_c, a: nil))
             }
             
             // TODO://  random choice

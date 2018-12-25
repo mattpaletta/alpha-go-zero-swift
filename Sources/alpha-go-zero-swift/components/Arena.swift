@@ -9,12 +9,12 @@ import Foundation
 
 class Arena {
     
-    private let player1: ((Board) -> [Int])
-    private let player2: ((Board) -> [Int])
+    private let player1: ((Board) -> Int)
+    private let player2: ((Board) -> Int)
     private let game: Game
     
-    init(player1: @escaping ((Board) -> [Int]),
-         player2: @escaping ((Board) -> [Int]),
+    init(player1: @escaping ((Board) -> Int),
+         player2: @escaping ((Board) -> Int),
          game: Game) {
         self.player1 = player1
         self.player2 = player2

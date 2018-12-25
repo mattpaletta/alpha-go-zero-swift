@@ -46,18 +46,26 @@ class Game {
         return board.get_canonical_form(player: player)
     }
     
-    func get_symmetries(board: Board, pi: [Double]) -> [(board: Board, pi: Double)] {
+    func get_symmetries(board: Board, pi: [Double]) -> [(board: [[Int]], pi: [Double])] {
         assert(pi.count == (self.size ^ 2) + 1)
-        let pi_board: [Int] = pi.to_square()
-        
-        var l: [Int] = []
+        let pi_board = Array<Double>.to_square(pi)
+
+        var l: [(board: [[Int]], pi: [Double])] = []
         for i in 1 ..< 5 {
-            for i in [true, false] {
+            for j in [true, false] {
+                var newB = rotate(board.pieces, i)
+                var newPi = rotate(pi_board, i)
                 
+                if j {
+                    newB = fliplr(newB)
+                    newPi = fliplr(newPi)
+                }
+                
+                l += [(newB, flatten(newPi) + pi.last!)]
             }
         }
         
-        return [(board: board, pi: 0.0)]
+        return l
     }
     
     func get_next_state(board: Board, player: Int, action: Int) -> (Board, Int) {

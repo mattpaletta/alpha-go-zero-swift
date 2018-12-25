@@ -81,12 +81,10 @@ class MCTS {
         if temp == 0 {
             print("No knowledge, choosing action with most visits")
             let best_action = counts.argmax()
-            for id in best_action {
-                probs[id] = 1.0
-            }
+            probs[best_action] = 1.0
         } else {
             print("Scaling counts for actions")
-            counts = counts ^ Double(1.0 / Double(temp))
+            counts = pow(counts, Double(1.0 / Double(temp)))
             probs = counts * (1.0 / Double(counts.reduce(0, +)))
         }
         
@@ -114,7 +112,8 @@ class MCTS {
             self.Ps.updateValue(action_prob, forKey: board_string)
             
             let valids = self.game.get_valid_moves(board: board, player: FIRST_PLAYER)
-            self.Ps.updateValue(self.Ps[board_string]! * valids, forKey: board_string)
+            
+            self.Ps.updateValue(Array.mask(self.Ps[board_string]!, mask: valids), forKey: board_string)
             let sum_Ps_s = self.Ps[board_string]!.reduce(0, +)
         }
         

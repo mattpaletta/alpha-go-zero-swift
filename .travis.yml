@@ -1,0 +1,18 @@
+sudo: required
+language: swift
+
+osx_image: xcode10.1
+
+swift:
+  - 4.2
+
+install: true
+
+script:
+  - swift build
+  - swift test
+
+notifications:
+  email:
+    on_failure: change
+    on_success: never

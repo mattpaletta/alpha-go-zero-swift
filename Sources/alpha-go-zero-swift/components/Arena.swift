@@ -22,8 +22,6 @@ class Arena {
     }
     
     func play_games(size: Int) -> (one: Int, two: Int, draws: Int) {
-//        let max_episodes = size
-//        let num = size / 2
         
         let results = Array(0..<(size)).pmap(transformer: run_arena).reduce(into: (one: 0, two: 0, draws: 0, episodes: 0)) { (result, arg1) in
             let (one, two, draws, eps) = arg1
@@ -31,7 +29,6 @@ class Arena {
             result.two += two
             result.draws += draws
             result.episodes += eps
-//            return (one: result.one + one, two: result.two + two, draws: result.draws + draws, episodes: result.episodes + eps)
         }
         
         print(results)

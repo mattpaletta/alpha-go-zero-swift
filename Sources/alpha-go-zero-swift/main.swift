@@ -19,8 +19,11 @@ let LOAD_MODEL = false
 let load_folder_file = ["models/8x100x50", "best.pth.tar"]
 
 // TRAIN
-let NUM_ITERS = 100
-let NUM_EPISODES = 1000
+//let NUM_ITERS = 100
+let NUM_ITERS = 10
+//let NUM_EPISODES = 1000
+let NUM_EPISODES = 10
+
 
 // ARENA
 let ARENA_SIZE = 40
@@ -35,8 +38,8 @@ let LOAD_EXAMPLES = false
 
 
 let game = Game(size: BOARD_SIZE)
-let nnet = NNet(board_size: BOARD_SIZE, action_size: game.action_size)
-let pnet = NNet(board_size: BOARD_SIZE, action_size: game.action_size)
+let nnet = NNet(board_size: game.action_size, action_size: game.action_size)
+let pnet = NNet(board_size: game.action_size, action_size: game.action_size)
 
 let coach = Coach(game: game,
                   nnet: nnet,
@@ -47,12 +50,12 @@ let coach = Coach(game: game,
                   load_examples: LOAD_EXAMPLES)
 
 print("Hello world!")
-//coach.learn(training_examples: NUM_EPISODES,
-//            keep_training_examples: MAX_LEN_OF_QUEUE,
-//            checkpoint_folder: CHECHPOINT_DIR,
-//            arena_tournament_size: ARENA_SIZE,
-//            model_update_win_threshold: UPDATE_THRESHOLD,
-//            num_mcst_sims: NUM_MCTS_SIMS,
-//            c_puct: C_PUCT,
-//            know_nothing_training_iters: TEMP_THRESHOLD,
-//            max_cpus: NUM_THREADS)
+coach.learn(training_examples: NUM_EPISODES,
+            keep_training_examples: MAX_LEN_OF_QUEUE,
+            checkpoint_folder: CHECHPOINT_DIR,
+            arena_tournament_size: ARENA_SIZE,
+            model_update_win_threshold: UPDATE_THRESHOLD,
+            num_mcst_sims: NUM_MCTS_SIMS,
+            c_puct: C_PUCT,
+            know_nothing_training_iters: TEMP_THRESHOLD,
+            max_cpus: NUM_THREADS)

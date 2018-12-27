@@ -185,7 +185,7 @@ class Coach {
     }
     
     private func save_training_examples() {
-        
+        assert(false, "finish implementing save_training_examples")
     }
     
     private func execute_episode(mcts: MCTS, know_nothing_training_iters: Int, current_iteration_self_play: Int) -> [TrainExample] {
@@ -209,7 +209,6 @@ class Coach {
                 train_examples.append((board: b, player: cur_player, pi: pi_c, a: nil))
             }
             
-            // TODO://  random choice
             let action = 0
             let (board, cur_player) = self.game.get_next_state(board: board,
                                                                player: cur_player,
@@ -219,10 +218,8 @@ class Coach {
             if r != 0 {
                 return train_examples.map({ example in
                     return example
-//                    return (example[0], example[2], (-r) ^ (example[1] != cur_player))
                 })
             }
         }
     }
-    
 }

@@ -115,10 +115,10 @@ class MCTS {
             
             self.Ps.updateValue(Array.mask(self.Ps[board_string]!, mask: valids), forKey: board_string)
             let sum_Ps_s = self.Ps[board_string]!.reduce(0, +)
+            
+            // TODO:// Finish this part!!!
         }
         
         return 1
     }
-    
-    
 }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Python
 
 class Game {
     
@@ -39,7 +38,11 @@ class Game {
     }
     
     func as_string(board: Board) -> String {
-        return ""
+        let piece_arr = flatten(board.pieces).map { piece in
+            return "\(piece)"
+        }
+        
+        return piece_arr.joined()
     }
     
     func get_canonical_form(board: Board, player: Int) -> Board {
@@ -97,23 +100,33 @@ class Game {
                     return board.pieces[w][j]
                 })).count == 1
                 
-                let w2_range = Set(Array(0 ..< self.size - self.size + 1).map({ (k) -> Int in
-                    return board.pieces[w + k][h + k]
-                })).count == 1
-                
-                let h2_range = Set(Array(self.size - self.size + 1 ..< self.size).map({ (l) -> Int in
-                    return board.pieces[w + l][h + l]
-                })).count == 1
-                
                 let is_empty_piece = board.pieces[w][h] != 0
+                
+                // && is_empty_piece is part of all of them.
+                if !is_empty_piece {
+                    break
+                }
                 
                 if contains_w && is_empty_piece && w_range {
                     return Double(board.pieces[w][h])
                 } else if contains_h && is_empty_piece && h_range {
                     return Double(board.pieces[w][h])
-                } else if contains_w && contains_h && is_empty_piece && w2_range {
+                }
+                
+                let w2_range = Set(Array(0 ..< n).map({ (k) -> Int in
+                    return board.pieces[w + k][h + k]
+                })).count == 1
+                
+                if contains_w && contains_h && is_empty_piece && w2_range {
                     return Double(board.pieces[w][h])
-                } else if contains_w && contains_h && is_empty_piece && h2_range {
+                    
+                }
+                
+                let h2_range = Set(Array(0 ..< n).map({ (l) -> Int in
+                    return board.pieces[w + l][h + l]
+                })).count == 1
+                
+                if contains_w && contains_h && is_empty_piece && h2_range {
                     return Double(board.pieces[w][h])
                 }
             }
@@ -130,7 +143,7 @@ class Game {
         var valids = Array.init(repeating: 0, count: self.action_size)
         let b = Board(size: self.size)
         b.pieces = board.pieces
-        let legal_moves = b.get_legal_moves(player: player)
+        let legal_moves = b.get_legal_moves()
         if legal_moves.isEmpty {
             valids[-1] = 1
             return valids

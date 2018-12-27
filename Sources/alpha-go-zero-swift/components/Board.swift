@@ -35,15 +35,27 @@ class Board {
     }
     
     func execute_move(move: (Int, Int), player: Int) {
-        
+        let (x, y) = move
+        assert(self.pieces[x][y] == 0)
+        self.pieces[x][y] = player
     }
     
-    func get_legal_moves(player: Int) -> [(Int, Int)] {
-        return []
+    func get_legal_moves() -> [(Int, Int)] {
+        var moves: [(Int, Int)] = []
+        
+        // Get all empty locations.
+        for y in 0 ..< self.size {
+            for x in 0 ..< self.size {
+                if self.pieces[x][y] == 0 {
+                    moves.append((x, y))
+                }
+            }
+        }
+        
+        return moves
     }
     
     func has_legal_moves() -> Bool {
-        return false
+        return self.get_legal_moves().count > 0
     }
-    
 }
